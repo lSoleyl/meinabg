@@ -17,3 +17,16 @@
 <tr><th colspan=4 align=left>Alle Aktien </th><td align=left>{{total_share_value}}&euro;</td><td align=left><td></tr>
 </table>
 </div>
+<div id="heading_bg">
+<div align="left"><font size="+2">Meine Autotrader</font></div></div>
+<div id="main">
+<a href="index.php?ACTION=addatrader">Autotrader hinzuf&uuml;gen</a><br>
+<table><tr>
+<th style="background-image:url({IMAGE_DIR}/heading_bg.gif)">Aktie</th>
+<th style="background-image:url({IMAGE_DIR}/heading_bg.gif)">Kaufen bei</th>
+<th style="background-image:url({IMAGE_DIR}/heading_bg.gif)">Kaufen</th>
+<th style="background-image:url({IMAGE_DIR}/heading_bg.gif)">Verkaufen bei</th>
+<th style="background-image:url({IMAGE_DIR}/heading_bg.gif)">Verkaufen</th></tr>
+{{autotraders}}
+</table>
+</div>
