@@ -1,0 +1,25 @@
+<?php  
+check_login();
+$header = h();
+$id = GET("id");
+if ($id == "")
+  penalty(1000, $message);
+$id = intval($id);
+$query = "SELECT AN,BETREFF,INHALT,GELESEN,GESENDETAM,NAME FROM `nachricht` LEFT OUTER JOIN `spieler` ON `nachricht`.VON = `spieler`.ID WHERE `nachricht`.ID = $id";
+$result = mysql_query($query);
+if (mysql_numrows($result) != 1) {
+	set_hint("<div class=\"error\">Die Nachricht existiert nicht mehr!</div>");
+	redirect_to("messages");
+}
+if (mysql_result($result, 0, "AN") != uid())
+	penalty(1000, $message);
+$betr = mysql_result($result, 0, "BETREFF");
+$inhalt = mysql_result($result, 0, "INHALT");
+$gelesen = mysql_result($result, 0, "GELESEN");
+$date = date("d.m.y H:i:s", mysql_result($result, 0, "GESENDETAM"));
+$von = mysql_result($result, 0, "NAME");
+if ($gelesen == 0) {
+	$query = "UPDATE `nachricht` SET GELESEN = 1 WHERE ID = $id";
+	mysql_query($query);
+}
+?> 

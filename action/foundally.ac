@@ -1,0 +1,48 @@
+<?php  
+check_login();
+$header=h(); 
+$query = "SELECT TOTALBALANCE,ALLY FROM `spieler` WHERE ID = " . uid();
+$result = mysql_query($query);
+$total = mysql_result($result, 0,"TOTALBALANCE");
+if ($total < 15000)
+  redirect_to("overview");
+if (!is_null(mysql_result($result, 0, "ALLY"))) //Shouldn't be punished, because it can easily happen by pressing the "back"-Button
+  redirect_to("overview");
+ 
+$error = "";
+if (post("name") != "") { //Foundation-Attempt
+  $name = post("name");
+  preg_match("/[A-Za-z0-9]*/", $name, $matches);
+  if ($matches[0] != $name) {
+	$error = error("Der Name darf nur alphanumerisch sein!");
+	render("foundally");
+  }
+  if (strlen($name) > 20) //That's ony possible with form-manipulation
+	penalty();
+  $pw1 = post("pw1");
+  $pw2 = post("pw2");
+  if ($pw1 != $pw2) {
+	$error = error("Die Passw&ouml;rter stimmen nicht &uuml;berein");
+	render("foundally");
+  }
+  $query = "SELECT * FROM `ally` WHERE NAME = \"$name\"";
+  $result = mysql_query($query);
+  if (mysql_numrows($result) > 0) {
+	$error = error("Eine {ally} mit den Namen '$name' gibt es bereits!");
+	render("foundally");
+  }
+  $query = "SELECT COUNT(*) FROM `ally`";
+  $result = mysql_query($query);
+  $rank = mysql_result($result, 0,0) + 1;  
+  $pwhash = ($pw1 == "") ? "" : md5($PRESALT . $pw1 . $POSTSALT);
+  $query = "INSERT INTO `ally` (NAME, PW, TOTAL, AVG, RANK, OLDRANK) VALUES (\"$name\", \"$pwhash\", $total, $total, $rank, $rank)";
+  mysql_query($query);
+  $query = "SELECT ID FROM `ally` WHERE NAME = \"$name\"";
+  $result = mysql_query($query);
+  $id = mysql_result($result, 0,0);
+  $query = "UPDATE `spieler` SET ALLY = $id, BALANCE = BALANCE-1000 WHERE ID = " . uid();
+  mysql_query($query);
+  redirect_to("internranking");
+}
+ 
+?> 

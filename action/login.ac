@@ -1,0 +1,37 @@
+<?php
+if (!empty($_SESSION["uid"]))
+	redirect_to("overview");
+$header = h(0);
+$name = post("name");
+$pw = post("pw");
+$test = $name . $pw;
+preg_match('/[A-Za-z0-9]*/', $test, $matches);
+	
+if (post("name") != "" && post("pw") != "" && $matches[0] == $test) {
+  $query = "SELECT * FROM `spieler` WHERE NAME = \"$name\"";
+  $result = mysql_query($query);
+  if (mysql_numrows($result) != 1) {
+	$error = error("Der Benutzer '$name' existiert nicht!");
+  } else {
+	$orig_hash = mysql_result($result, 0,"PWHASH");
+	if (md5($PRESALT . $pw . $POSTSALT) != $orig_hash)
+		$error = "<div class=\"error\">Falsches Passwort eingegeben!</div>";
+	else {
+		$_SESSION["uid"] = mysql_result($result, 0, "ID");
+		
+		$query = "UPDATE `spieler` SET LASTLOGIN = " . time(). " WHERE ID=". uid();
+		mysql_query($query);
+		redirect_to("loggedin");
+	}
+  }
+} else {
+  $error = hint();
+}
+$repl = array("\"" => "", "'" => "");
+$name = strtr($name, $repl);
+$pw = strtr($pw, $repl);
+
+$form = form("login");
+$name_input = input("name", $name);
+$pw_input = input("pw", $pw, "password");
+?>

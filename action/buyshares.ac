@@ -1,0 +1,76 @@
+<?php 
+check_login();
+$header = h();
+$error = "";
+if (post("count") != "" && post("id") != "" && intval(post("count")) > 0) {
+	$count = intval(post("count"));
+	$id = post("id");
+	$query = "SELECT BALANCE FROM `spieler` WHERE ID = " . uid();
+	$result = mysql_query($query);
+	$balance = mysql_result($result, 0, 0);
+	$query = "SELECT * FROM `aktie` WHERE ID = \"$id\"";
+	$result = mysql_query($query);
+	if (mysql_numrows($result) != 1)
+		penalty(1000,$message);
+	$price = mysql_result($result, 0, "KP");
+	$name = mysql_result($result, 0, "NAME");
+	if ($price * $count > $balance)
+		$count = floor($balance / $price);
+	if ($count <= 0) {
+		$error = error("Du kannst dir keine Aktien leisten!");
+		$share_name = $name;
+		$share_price = $price;
+		$max_shares = 0;
+		$query = "SELECT ANZAHL FROM `besitzt` WHERE SPIELERID = " . uid() . " AND AKTIENID = \"$id\"";
+		$result = mysql_query($query);
+		if (mysql_numrows($result) != 1)
+			$my_shares = 0;
+		else
+			$my_shares = mysql_result($result, 0, 0);
+		
+		render("buyshares");
+	}
+	$query = "UPDATE `spieler` SET BALANCE=BALANCE-".($count*$price)." WHERE ID = " . uid();
+	mysql_query($query); //Update Balance
+	$query = "SELECT ANZAHL FROM `besitzt` WHERE AKTIENID = \"$id\" AND SPIELERID = ". uid();
+	$result = mysql_query($query);
+	if (mysql_numrows($result) == 0) { //Add
+		$query = "INSERT INTO `besitzt` (AKTIENID, SPIELERID, ANZAHL) VALUES (\"$id\", ". uid() . ", $count)";
+		mysql_query($query);
+	} else { //Set
+		$query = "UPDATE `besitzt` SET ANZAHL=ANZAHL+$count WHERE AKTIENID = \"$id\" AND SPIELERID = ". uid();
+		mysql_query($query);
+	}
+	$query = "INSERT INTO `transaktion` (SPIELERID, AKTIENID, ANZAHL, PREIS, VERKAUF) VALUES (". uid() . ", \"$id\", $count, $price, 0)";
+	mysql_query($query);
+	set_hint("<div class=\"succ\">$count '$name' Aktien gekauft</div>");
+	redirect_to("myshares");
+}
+
+$id = get("ID");
+if ($id == "") 
+	redirect_to("allshares");
+preg_match('/[A-Za-z0-9]*/', $id, $matches);
+if ($matches[0] != $id)
+	penalty(1000,$message);
+$query = "SELECT * FROM `aktie` WHERE ID = \"$id\"";
+$result = mysql_query($query);
+if (mysql_numrows($result) != 1)
+	penalty(1000,$message);
+$share_name = mysql_result($result, 0, "NAME");
+$share_price = mysql_result($result, 0, "KP");
+
+$query = "SELECT * FROM `spieler` WHERE ID = " . uid();
+$result = mysql_query($query);
+$balance = mysql_result($result, 0, "BALANCE");
+$max_shares = floor($balance / $share_price);
+if ($max_shares < 0)
+  $max_shares = 0;
+
+$query = "SELECT ANZAHL FROM `besitzt` WHERE SPIELERID = " . uid() . " AND AKTIENID = \"$id\"";
+$result = mysql_query($query);
+if (mysql_numrows($result) != 1)
+	$my_shares = 0;
+else
+	$my_shares = mysql_result($result, 0, 0);
+?> 

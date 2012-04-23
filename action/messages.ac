@@ -1,0 +1,43 @@
+<?php  
+//This action also takes care of deleting messages
+check_login();
+$header = h(4);
+$form = hint() . form("messages");
+if (post("delete") != "") {
+	$ary = post("remove", array());
+	$length = count($ary);
+	for($c = 0; $c < $length; ++$c) {
+	  $id = intval($ary[$c]);
+	  $query = "SELECT AN FROM `nachricht` WHERE ID = $id";
+	  $result = mysql_query($query);
+	  if (mysql_numrows($result) == 1) {
+		if (mysql_result($result, 0,0) != uid())
+			penalty(1000, $message);
+		$query = "DELETE FROM `nachricht` WHERE ID = $id";
+		mysql_query($query);
+	  }
+	}
+} 
+
+$query = "SELECT `nachricht`.ID,BETREFF,GELESEN,GESENDETAM,NAME FROM `nachricht` LEFT OUTER JOIN `spieler` ON `nachricht`.VON = `spieler`.ID WHERE AN = " . uid() . " ORDER BY GESENDETAM DESC";
+$result = mysql_query($query);
+$length = mysql_numrows($result);
+$messages = "";
+if ($length == 0) {
+  $messages = "<tr><td colspan=4><i>Du hast keine neuen Nachrichten erhalten</i></td></tr>";
+} else {
+  for($c = 0; $c < $length; ++$c) {
+    $name = mysql_result($result, $c, "NAME");
+	$name = is_null($name) ? "<s>Gel&ouml;scht</s>" : $name;
+	$betr = mysql_result($result, $c, "BETREFF");
+	$gelesen = mysql_result($result, $c, "GELESEN");
+	$time = mysql_result($result, $c, "GESENDETAM");
+	$id = mysql_result($result, $c, "ID");
+	$b = ($gelesen == 0) ? "<b>" : "";
+	$ob = ($gelesen == 0) ? "</b>" : "";
+	$class = ($c % 2 == 0) ? "high" : "highb";
+	$messages .= "<tr style=\"background-image:url({IMAGE_DIR}/heading_bg.gif)\"><td><input type=\"checkbox\" name=\"remove[]\" value=\"$id\"></td>";
+	$messages .= "<td>$b" . date("H:i:s m.d.y", $time) . "$ob</td><td>$b$name$ob</td><td><a href=\"index.php?ACTION=viewmessage&id=$id\" title=\"Nachricht lesen\">$b$betr$ob</a></td></tr>";
+  }
+}
+?> 

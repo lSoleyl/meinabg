@@ -1,0 +1,10 @@
+actions haben .ac Endungen und liegen immer in ./action
+view-Templates haben .tpl Endungen und liegen immer in ./view
+language-Files haben .lg Endungne und liegen in ./lang
+
+Innerhalb eines Templates werden Lang-Vars mit {name} und Action-Variablen mit {{name}}  referenziert
+
+Action-Variablen werden vor den Lang-Vars übersetzt
+
+render() rendert einen View
+redirect_to() führt eine Action aus

@@ -1,0 +1,27 @@
+<?php  
+check_login();
+$header=h();
+$query = "SELECT ALLY FROM `spieler` WHERE ID = " . uid();
+$result = mysql_query($query);
+$aid = mysql_result($result, 0,0);
+
+ 
+ $query = "SELECT ID, NAME, RANK, OLDRANK, AVG, COALESCE(MEMBER,0) AS MEMBERS, TOTAL FROM `ally` LEFT OUTER JOIN (SELECT ALLY, COUNT(*) AS MEMBER FROM `spieler` GROUP BY ALLY) as `new` ON `ally`.ID = `new`.ALLY ORDER BY RANK ASC";
+ $rankings = "";
+ $result = mysql_query($query);
+ while($ally = mysql_fetch_array($result)) {
+	$fa = (($ally["ID"] == $aid )? "<font color=dodgerblue><b>" : "");
+	$fe = (($ally["ID"] == $aid )? "</b></font>" : "");
+	$rankings .= "<tr style=\"background-image:url({IMAGE_DIR}/heading_bg.gif)\"><td>$fa" . $ally["RANK"];
+	if ($ally["RANK"] < $ally["OLDRANK"]) 
+		$rankings .= " <font color=#00ff00>(+" . ($ally["OLDRANK"] - $$ally["RANK"]) . ")</font>";
+	else if ($ally["RANK"] > $ally["OLDRANK"])
+		$rankings .= " <font color=#ff0000>(-" . ($ally["RANK"] - $ally["OLDRANK"]) . ")</font>"; 
+	$rankings .= "$fe</td><td><a href=\"index.php?ACTION=internranking&id=" . $ally["ID"]. "\">$fa" . $ally["NAME"]."$fe</a></td>";
+	$rankings .= "<td align=right>$fa". $ally["AVG"] . "&euro;$fe</td>";
+	$rankings .= "<td align=right>$fa" . $ally["TOTAL"] . "&euro;$fe</td>";
+	$rankings .= "<td align=right>$fa" . $ally["MEMBERS"] . "</td></tr>"; 
+ 
+ }
+ 
+?> 

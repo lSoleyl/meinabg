@@ -1,0 +1,4 @@
+<?php  
+ check_login();
+ $header = h(0, true);
+?> 

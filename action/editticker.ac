@@ -1,0 +1,16 @@
+<?php  
+ $header = h();
+ check_login(1);
+ $ergebnis = "";
+ if (post("content") != "") {
+	$repl = array("\\\"" => "\"", "\\'" => "'", "\"" => "'");
+	$content = strtr(post("content"), $repl);
+	$query = "UPDATE `game` SET TICKER = \"$content\" WHERE ENTRYID = 1";
+	mysql_query($query); 
+	$ergebnis = "<div class=succ>Ticker wurde ge&auml;ndert</div>";
+ }
+ 
+ $query = "SELECT TICKER FROM `game` WHERE ENTRYID = 1";
+ $result = mysql_query($query);
+ $ticker = mysql_result($result, 0, 0);
+?> 

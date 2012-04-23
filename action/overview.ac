@@ -1,0 +1,72 @@
+<?php  
+check_login();
+$header = h(1);
+$ally_links = "";
+
+$query = "SELECT * FROM `spieler` WHERE ID = ". uid();
+$result = mysql_query($query);
+if (mysql_numrows($result) == 0) {
+ $_SESSION["uid"] = "";
+ redirect_to("login");
+}
+
+if (mysql_result($result, 0, "ACCTYPE") == 1)
+  $admin_links = "<div id=\"heading_bg\">
+  <div align=left><font size=\"+2\">Adminlinks</font></div></div>
+  <div align=left>
+  <a href=\"index.php?ACTION=delplayer\">Spieler l&ouml;schen</a><br>
+  <a href=\"index.php?ACTION=resetgame\">Spielerkonten zur&uuml;cksetzen</a><br>
+  <a href=\"index.php?ACTION=editticker\">Newsticker &auml;ndern</a><br>
+  <a href=\"index.php?ACTION=customquery\">Manuelle Query</a><br>
+  <a href=\"index.php?ACTION=updatenow\">Jetzt Updaten!</a><br>
+  <a href=\"index.php?ACTION=hashgen\">PWHash-Generator</a><br>
+  <a href=\"index.php?ACTION=loginas\">Einloggen als</a></div>";
+else
+  $admin_links = "";
+$li = mysql_result($result, 0, "LASTINTEREST");
+$today = date("Y-m-d", time());
+//tgl. Zinsabrechnung
+if ($li != $today) {  
+  $query = "UPDATE `spieler` SET BALANCE=BALANCE*1.0007, LASTINTEREST=\"$today\"";
+  mysql_query($query);
+  $result = mysql_query("SELECT * FROM `spieler` WHERE ID = ". uid());
+}
+
+$allyid = mysql_result($result, 0, "ALLY");
+$balance = mysql_result($result, 0, "BALANCE");
+if ($balance < 0)
+	$balance = "<font color=#ff0000>$balance</font>";
+$rank = mysql_result($result, 0, "RANK");
+$totalbalance = mysql_result($result, 0, "TOTALBALANCE");
+if ($totalbalance < 0)
+	$totalbalance = "<font color=#ff0000>$totalbalance</font>";
+
+if (!is_null($allyid)) {
+	$result = mysql_query("SELECT NAME FROM `ally` WHERE ID = $allyid");
+	$allyname = mysql_result($result, 0,0);
+	$ally_links = "<div id=\"heading_bg\"><div align=left><font size=\"+2\">$allyname</font></div></div><div align=left>";
+	$ally_links .= "<a href=\"index.php?ACTION=internranking\">{allys}interne Rangliste</a><br>";
+	$ally_links .= "<a href=\"index.php?ACTION=newmessage&to=[$allyname]\">Rundmail schreiben</a><br>";
+	$ally_links .= "<a href=\"index.php?ACTION=leaveally\">Aus {ally} austreten</a></div>";
+} else {
+	$ally_links = "<div id=\"heading_bg\"><div align=left><font size=\"+2\">{ally}</font></div></div><div align=left>";
+	$result = mysql_query("SELECT ID,NAME FROM `ally`");
+	if (mysql_numrows($result) > 0) {
+		$ally_links .= "<form action=\"index.php?ACTION=joinally\" method=post><select name=\"allyid\">";	
+		while($ary = mysql_fetch_array($result))
+		  $ally_links .= "<option value=" . $ary["ID"] . ">". $ary["NAME"] . "</option>";
+		$ally_links .= "</select><input type=\"submit\" value=\"beitreten\"></form>";
+	} else {
+		$ally_links .= "Es gibt momentan keine {ally_pl}";
+	}
+	if ($totalbalance >= 15000) {
+		$ally_links .= "<a href=\"index.php?ACTION=foundally\">{ally} Gr&uuml;nden</a></div>";
+	}	
+}
+
+
+$query = "SELECT TICKER FROM `game` WHERE ENTRYID=1";
+$result = mysql_query($query);
+
+$news = mysql_result($result, 0, 0);
+?> 

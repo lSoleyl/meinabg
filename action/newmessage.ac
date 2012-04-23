@@ -1,0 +1,9 @@
+<?php  
+check_login();
+$header = h();
+$to = get("to");
+$form = form("sendmessage");
+$betr = get("betr", "Kein Betreff");
+$message = get("message");
+$error = "";
+?> 

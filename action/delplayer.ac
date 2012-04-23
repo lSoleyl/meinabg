@@ -1,0 +1,30 @@
+<?php  
+ $header = h();
+ check_login(1);
+ $pid = post("pid");
+ $res = "";
+ if ($pid != "") {
+	$result = mysql_query("SELEcT ALLY FROM `spieler` WHERE ID = $pid");
+	$aid = mysql_result($result, 0,0);
+	mysql_query("DELETE FROM `spieler` WHERE ID = $pid");
+	if (!is_null($aid)) {
+		$result = mysql_query("SELECT COUNT(*) FROM `spieler` WHERE ALLY = $aid");
+		if (mysql_result($result, 0,0) == 0)
+			mysql_query("DELETE FROM `ally` WHERE ID = $aid");
+	}
+	mysql_query("DELETE FROM `nachricht` WHERE AN = $pid");
+	mysql_query("DELETE FROM `besitzt` WHERE SPIELERID = $pid");
+	mysql_query("DELETE FROM `transaktion` WHERE SPIELERID = $pid");
+	
+	$res = "<div class=succ>Spieler wurde gel&ouml;scht</div>";
+ }
+ $query = "SELECT ID, NAME FROM `spieler` ORDER BY NAME";
+ $result = mysql_query($query);
+ $length = mysql_numrows($result);
+ $select = "";
+ for($c = 0; $c < $length; ++$c) {
+	$id = mysql_result($result, $c, "ID");
+	$name = mysql_result($result, $c, "NAME");
+	$select .= "<option value=\"$id\">$name</option>";
+ }
+?> 

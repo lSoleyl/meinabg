@@ -1,0 +1,58 @@
+<?php
+ $header = h(0);
+ if (uid() != "")
+	penalty(1000);
+ $error = "";
+ $form = form("register");
+ 
+ $name = post("name");
+ $pw1 = post("pw1");
+ $pw2 = post("pw2");
+ $test = $name . $pw1;
+ preg_match('/[A-Za-z0-9]*/', $test, $matches);
+ if (($name != "" || $pw1 != "" || $pw2 != "") && $matches[0] == $test) { //Registration attempt
+	if ($pw1 == "") {
+		$error = error("Das Passwort darf nicht leer sein!");
+		render("register");
+	} else if ($pw1 != $pw2) {
+		$error = error("Die Passw&ouml;rter stimmen nicht &uuml;berein!");
+		render("register");
+	} else if ($name == "") {
+		$error = error("Der Name darf nicht leer sein!");
+		render("register");
+	}
+	//Perform Name-Validation-Check
+	if (strlen($name) > 30) {
+		$error = error("Der Name ist zu lang!");
+		render("register");
+	}
+	preg_match("/[0-9a-zA-Z]*/", $name, $matches);
+	if ($matches[0] != $name) {
+		$error = error("Der Name darf keine Sonderzeichen, Leerzeichen oder Umlaute enthalten");
+		render("register");
+	}
+	//Check, whether name is available
+	$query = "SELECT * FROM `spieler` where NAME = \"$name\"";
+	$result = mysql_query($query);
+	if (mysql_numrows($result) > 0) {
+		$error = error("Der Name ist bereits vergeben");
+		render("register");
+	}
+	//Insert Data into Database
+	$query = "SELECT COUNT(*) FROM `spieler`";
+	$result = mysql_query($query);
+	$rank = mysql_result($result, 0, 0) + 1;
+	
+	$pwhash = md5($PRESALT . $pw1 . $POSTSALT);
+	$lastlogin = time();
+	$li = date("Y-m-d", $lastlogin);
+	$query = "INSERT INTO `spieler` (NAME,PWHASH,RANK,LASTRANK,LASTLOGIN,LASTINTEREST,TITLE) VALUES (\"$name\",\"$pwhash\",$rank, $rank, $lastlogin, \"$li\", \"\")";
+	mysql_query($query);
+	if (mysql_errno()) die(mysql_error());
+	
+	set_hint("<div class=\"succ\">Der Account '$name' wurde erfolgreich angelegt</div>");
+	
+	redirect_to("login");
+ }
+ $name = strtr($name, array("\"" => "", "\\" => ""));
+?> 

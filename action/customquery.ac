@@ -1,0 +1,37 @@
+<?php  
+ $header = h();
+ check_login(1);
+ $query = post("query");
+ $results = "";
+ $numrows = "";
+ 
+ $repl = array("\\\"" => "\"", "\\'" => "'");
+ $query = strtr($query, $repl);
+ if ($query != "") {
+	$result = mysql_query($query);
+	if (mysql_errno())
+		$results = error(mysql_error() . "<br>$query");
+	else {
+		$head = false;
+		$tableheader = "";
+		if (is_bool($result)) {
+			$results = "<span style=\"background-image:url({IMAGE_DIR}/heading_bg.gif)\">$query</span>";
+			$numrows = "<div class=succ> Keine Ergebnisse</div>";
+		} else {
+			while($ary = mysql_fetch_array($result, MYSQL_ASSOC)) {
+				$results .= "<tr>";
+				foreach($ary as $title => $value) {
+					if (!$head)
+						$tableheader .= "<th>$title</th>";
+					$results .= "<td>$value</td>";
+				}
+				if (!$head)
+					$head = true;
+				$results .= "</tr>";
+			}
+			$results = "<span style=\"background-image:url({IMAGE_DIR}/heading_bg.gif)\">$query</span><table><tr>" . $tableheader . "</tr><tbody class=high>" . $results. "</tbody></table>";
+			$numrows = "<div class=succ>" . mysql_numrows($result) . " Zeilen</div>" ; 
+		}
+	}
+ }
+?> 

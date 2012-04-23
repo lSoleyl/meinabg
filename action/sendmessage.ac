@@ -1,0 +1,77 @@
+<?php  
+ check_login();
+ $header = h();
+ $to = post("to");
+ $betr = post("betr");
+ $message = post("message");
+ 
+ $form = form("sendmessage");
+ if (strlen($betr) > 50)
+	penalty(1000, $message);
+ if (strlen($message) > 5000)
+	penalty(1000, $message);
+ if (strlen(trim($betr)) < 1) {
+	$error = error("Betreff darf nicht leer sein!");
+	render("newmessage");
+ }
+ $repl = array("\"" => "&#x201d;", 
+ "'" => "&#x201d", 
+ ">" => "&gt;", 
+ "<" => "&lt;",
+ "ä" => "&auml;",
+ "ö" => "&ouml;",
+ "ü" => "&uuml;",
+ "&" => "&amp;",
+ "Ä" => "&Auml;",
+ "Ö" => "&Ouml;",
+ "Ü" => "&Uuml;",
+ "ß" => "&szlig;"
+ );
+ $to = strtr($to, array("\"" => "", "'" => "", "\\" => ""));
+ 
+ preg_match("/\[[0-9A-Za-z]*\]/", $to, $matches);
+ if ($matches[0] == $to) { //Rundmail
+	$to = substr($to,1,-1);
+	$query = "SELECT ID FROM `ally` WHERE NAME=\"$to\"";
+	$result = mysql_query($query);
+	if (mysql_numrows($result) != 1) {
+		$error = error("{ally} '$to' konnte nicht gefunden werden");
+		$form = form("sendmessage");
+		$betr = strtr($betr, array("\"" => "", "\\" => ""));
+		render("newmessage");
+	}
+	$aid = mysql_result($result, 0,0);
+	$query = "SELECT ALLY FROM `spieler` WHERE ID = " . uid();
+	$result = mysql_query($query);
+	if ($aid != mysql_result($result, 0,0)) {
+		$error = error("Es d&uuml;rfen keine Nachrichten an fremde Verteiler verschickt werden");
+		$form = form("sendmessage");
+		$betr = strtr($betr, array("\"" => "", "\\" => ""));
+		render("newmessage");
+	}
+	$query = "SELECT ID FROM `spieler` WHERE ALLY = $aid";
+	$result = mysql_query($query);
+	while($player = mysql_fetch_array($result)) {
+		$query = "INSERT INTO `nachricht` (BETREFF, VON, AN, GESENDETAM, INHALT) VALUES (\"$betr\", ". uid() . ", ". $player["ID"] .  ", " . time() . ", \"$message\")";
+		mysql_query($query);	
+	}
+	
+ } else { //Spielernachricht 
+	 $query = "SELECT ID FROM `spieler` WHERE NAME = \"$to\"";
+	 $result = mysql_query($query);
+	 if (mysql_errno()) die("($to)". $query);
+	 if (mysql_numrows($result) != 1) {
+		$error = "<div class=\"error\">Spieler '$to' konnte nicht gefunden werden</div>";
+		$form = form("sendmessage");
+		$betr = strtr($betr, array("\"" => "", "\\" => ""));
+		render("newmessage");
+	 }
+	 $betr = strtr($betr, $repl);
+	 $message = strtr($message, $repl);
+	 
+	 //Es wird nicht geprüft, ob man eine Nachricht an sich selbst schickt... das ist momentan erlaubt.
+	 $id = mysql_result($result, 0, 0);
+	 $query = "INSERT INTO `nachricht` (BETREFF, VON, AN, GESENDETAM, INHALT) VALUES (\"$betr\", ". uid() . ", $id, " . time() . ", \"$message\")";
+	 mysql_query($query);
+ }
+?> 

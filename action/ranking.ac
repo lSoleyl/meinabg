@@ -1,0 +1,45 @@
+<?php  
+ check_login();
+ $header = h(5);
+ $query = "SELECT ALLY FROM `spieler` WHERE ID = " . uid();
+ $result = mysql_query($query);
+ $my_aid = mysql_result($result, 0,0);
+ if (is_null($my_aid))
+	$my_aid = -1;
+ 
+ $query = "SELECT `spieler`.ID, TITLE, `spieler`.NAME, TOTALBALANCE, `spieler`.RANK, `spieler`.LASTRANK, ACCTYPE, ALLY, `ally`.NAME AS ALLYNAME FROM `spieler` LEFT OUTER JOIN `ally` ON `spieler`.ALLY = `ally`.ID ORDER BY RANK ASC";
+ $result = mysql_query($query);
+ if (mysql_errno()) die (mysql_error());
+ $count = mysql_numrows($result);
+ $rankings = "";
+ for($c = 0; $c < $count; ++$c) {
+	$name = mysql_result($result, $c, "NAME");
+	$tbalance = mysql_result($result, $c, "TOTALBALANCE");
+	$rank = mysql_result($result, $c, "RANK");
+	$lrank = mysql_result($result, $c, "LASTRANK");
+	$acctype = mysql_result($result, $c, "ACCTYPE");
+	$pid = mysql_result($result, $c, "ID");
+	$title = mysql_result($result, $c, "TITLE");
+	$aid = mysql_result($result, $c, "ALLY");
+	$aname = mysql_result($result, $c, "ALLYNAME");
+	$fa = (($pid == uid()) ? "<font color=orange><b>" : (($aid == $my_aid )? "<font color=dodgerblue><b>" : ""));
+	$fe = (($pid == uid()) ? "</b></font>" : (($aid == $my_aid )? "</b></font>" : ""));
+	$rankings .= "<tr style=\"background-image:url({IMAGE_DIR}/heading_bg.gif)\"><td>$fa" . $rank;
+	if ($rank < $lrank) 
+		$rankings .= " <font color=#00ff00>(+" . ($lrank - $rank) . ")</font>";
+	else if ($rank > $lrank)
+		$rankings .= " <font color=#ff0000>(-" . ($rank - $lrank) . ")</font>"; 
+	$rankings .= "$fe</td><td>$fa";
+	$rankings .= "$name ";
+	if ($acctype == 1) 
+		$rankings .= "$fe (<font color=green>Admin</font>)$fa";
+	else if ($title != "")
+		$rankings .= "$fe (<font color=indigo>$title</font>)$fa";
+	$rankings .= "<a href=\"index.php?ACTION=newmessage&to=$name\"><img src=\"$HTML_IMAGES/message.jpg\"></a>$fe</td>";
+	if (!is_null($aid))
+		$rankings .= "<td align=right><a href=\"index.php?ACTION=internranking&id=$aid\">$fa$aname$fe</a></td>";
+	else
+		$rankings .= "<td></td>";
+	$rankings .= "<td align=right>$fa$tbalance&euro;$fe</td></tr>"; 
+ }
+?> 

@@ -1,0 +1,34 @@
+<?php  
+check_login();
+$header=h();  
+$status = "";
+$oldpw = post("oldpw");
+$pw1 = post("pw1");
+$pw2 = post("pw2");
+$print = post("print");
+if ($oldpw != "" && $pw1 != "" && $pw2 != "") {
+	if ($pw1 != $pw2) {
+		$status = error("Die eingegebenen (neuen)Passw&ouml;ter stimmen nicht &uuml;berein");
+		render("changepw");
+	}
+	$query = "SELECT PWHASH FROM `spieler` WHERE ID = " . uid();
+	$result = mysql_query($query);
+	$hash = mysql_result($result, 0,0);
+	
+	if (md5($PRESALT . $oldpw . $POSTSALT) != $hash) {
+		$status = error("Das momentane Passwort wurde falsch eingegeben");
+		render("changepw");
+	}
+	$newhash = md5($PRESALT . $pw1 . $POSTSALT);
+	$query = "UPDATE `spieler` SET PWHASH = \"$newhash\" WHERE ID = " . uid();
+	mysql_query($query);
+	$status = "<div class=succ>Passwort wurde ";
+	if ($print == "1")
+		$status .= "in '$pw1' ";
+	$status .= "ge&auml;ndert.</div>";
+} else if (post("sub") != "") {
+	$status = error("Bitte alle Felder ausf&uuml;llen");
+}
+
+?> 
+

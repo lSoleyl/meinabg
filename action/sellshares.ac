@@ -1,0 +1,57 @@
+<?php 
+check_login();
+$header = h();
+$error = "";
+if (post("count") != "" && post("id") != "" && intval(post("count")) > 0) {
+	$count = intval(post("count"));
+	$id = post("id");
+	$query = "SELECT BALANCE FROM `spieler` WHERE ID = " . uid();
+	$result = mysql_query($query);
+	$balance = mysql_result($result, 0, 0);
+	$query = "SELECT * FROM `aktie` WHERE ID = \"$id\"";
+	$result = mysql_query($query);
+	if (mysql_numrows($result) != 1)
+		penalty(1000,$message);
+	$price = mysql_result($result, 0, "VP");
+	$name = mysql_result($result, 0, "NAME");
+	$query = "SELECT ANZAHL FROM `besitzt` WHERE SPIELERID = " . uid() . " AND AKTIENID = \"$id\"";
+	$result = mysql_query($query);
+	if (mysql_numrows($result) != 1)
+		penalty(1000,$message);
+	$anzahl = mysql_result($result, 0, 0);
+	if ($count > $anzahl)
+		$count = $anzahl;
+	if ($count == $anzahl)
+		$query = "DELETE FROM `besitzt` WHERE SPIELERID = ". uid() . " AND AKTIENID = \"$id\"";
+	else
+		$query = "UPDATE `besitzt` SET ANZAHL=ANZAHL-$count WHERE SPIELERID = ". uid() . " AND AKTIENID = \"$id\"";
+	mysql_query($query);
+	$query = "UPDATE `spieler` SET BALANCE=BALANCE+" . $count * $price . " WHERE ID = ". uid();
+	mysql_query($query);
+	
+	$query = "INSERT INTO `transaktion` (SPIELERID, AKTIENID, ANZAHL, PREIS, VERKAUF) VALUES (". uid() . ", \"$id\", $count, $price, 1)";
+	mysql_query($query);
+	set_hint("<div class=\"succ\">$count '$name' Aktien verkauft</div>");
+	redirect_to("myshares");
+}
+
+$id = get("ID");
+if ($id == "") 
+	redirect_to("allshares");
+preg_match('/[A-Za-z0-9]*/', $id, $matches);
+if ($matches[0] != $id)
+	penalty(1000,$message);
+$query = "SELECT * FROM `aktie` WHERE ID = \"$id\"";
+$result = mysql_query($query);
+if (mysql_numrows($result) != 1)
+	penalty(1000,$message);
+$share_name = mysql_result($result, 0, "NAME");
+$share_price = mysql_result($result, 0, "VP");
+
+$query = "SELECT ANZAHL FROM `besitzt` WHERE SPIELERID = " . uid() . " AND AKTIENID = \"$id\"";
+$result = mysql_query($query);
+if (mysql_numrows($result) != 1)
+	penalty(1000,$message);
+else
+	$max_shares = mysql_result($result, 0, 0);
+?> 

@@ -1,0 +1,12 @@
+<?php  
+$header=h(); 
+check_login(1);
+$result = "";
+
+$cipher = post("cipher");
+if ($cipher != "") {
+	$result = "Salted:<div class=high>" . md5($PRESALT . $cipher . $POSTSALT) . "</div>";
+	$result .= "Pure:<div class=high>" . md5($cipher) . "</div>";
+}
+ 
+?> 

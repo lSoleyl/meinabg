@@ -1,0 +1,50 @@
+<?php  
+check_login();
+$header = h(2);
+$hint = hint();
+
+$order = get("order");
+$sort_by = get("sort_by");
+if ($order != "" && $order != "asc" && $order != "desc")
+	penalty(1000, $message);
+if ($sort_by != "" && $sort_by != "name" && $sort_by != "vp" && $sort_by != "kp" && $sort_by != "count")
+	penalty(1000, $message);
+if ($order == "")
+	$order = "ASC";
+if ($sort_by == "")
+	$sort_by = "NAME";
+if ($sort_by == "count")
+	$sort_by = "BESITZ";
+$sort_by = strtoupper($sort_by);
+$order = strtoupper($order);
+$shares = "";
+$query = "SELECT `aktie`.ID,NAME,VP,KP, ANZAHL AS BESITZ, (ANZAHL*VP) as TOTAL FROM `aktie`,(SELECT ANZAHL,AKTIENID FROM `besitzt` WHERE SPIELERID = ". uid() .") AS `inner` WHERE `inner`.AKTIENID = `aktie`.ID ORDER BY $sort_by $order";
+$result = mysql_query($query);
+$length = mysql_numrows($result);
+$total_share_value = 0;
+for($c = 0; $c < $length; ++$c) {
+	$id = mysql_result($result, $c, "ID");
+	$name = mysql_result($result, $c, "NAME");
+	$vp = mysql_result($result, $c, "VP");
+	$kp = mysql_result($result, $c, "KP");
+	$besitz = mysql_result($result, $c, "BESITZ");
+	$total = mysql_result($result, $c, "TOTAL");
+	$total_share_value += $vp * $besitz;
+	$link = "http://www.boerse.de/aktien/$name/$id";
+	$shares .= "<tr style=\"background-image:url({IMAGE_DIR}/heading_bg.gif)\"><td><a href=\"$link\" title=\"Aktienkurs auf B&ouml;rse.de nachgucken\" target=_blank>$name</a></td><td><a href=\"index.php?ACTION=buyshares&ID=$id\" title=\"$name Aktien kaufen\">$kp</a></td><td>";
+	$shares .= (($besitz > 0) ? "<a href=\"index.php?ACTION=sellshares&ID=$id\" title=\"$name Aktien verkaufen\">$vp</a>" : "$vp") . "</td><td>$besitz</td><td>$total</td><td><a href=\"index.php?ACTION=translog&id=$id\">Transaktions-Log</a></td></tr>";
+}
+$total_share_value = sprintf("%.2f",$total_share_value);
+
+$query = "SELECT NAME, `aktie`.ID FROM `aktie`, (SELECT AKTIENID FROM `transaktion` WHERE SPIELERID = ". uid() . " GROUP BY AKTIENID) as `new` WHERE `new`.AKTIENID = `aktie`.ID";
+$result = mysql_query($query);
+$length = mysql_numrows($result);
+$select = "";
+for ($c = 0; $c < $length; ++$c) {
+	$select .= "<option value=\"". mysql_result($result, $c, "ID") . "\">". mysql_result($result, $c, "NAME") . "</option>";
+}
+if ($length == 0)
+  $dis = "disabled";
+else
+  $dis = "";
+?> 

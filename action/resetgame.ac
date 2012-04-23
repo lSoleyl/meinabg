@@ -1,0 +1,14 @@
+<?php  
+ $header = h();
+ check_login(1);
+ $msg = "";
+ if (post("confirmed") == "true") {
+	mysql_query("TRUNCATE TABLE `besitzt`");
+	mysql_query("ALTER TABLE `besitzt` AUTO_INCREMENT = 1");
+	mysql_query("TRUNCATE TABLE `transaktion`");
+	mysql_query("ALTER TABLE `transaktion` AUTO_INCREMENT = 1");
+	mysql_query("UPDATE `spieler` SET BALANCE = 10000");
+	mysql_query("UPDATE `game` SET TICKER = \"Spiel neugestartet am:" . date("d.m.y H:i:s") . "\", LASTUPDATE = 0 WHERE ENTRYID = 1");
+	$msg = "<div class=succ>Spiel wurde komplett neugestartet!</div>";
+ }
+?> 

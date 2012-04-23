@@ -1,0 +1,32 @@
+<?php  
+check_login();
+$header=h(); 
+$form = "";
+$message = "";
+$query = "SELECT ALLY FROM `spieler` WHERE ID = " . uid();
+$result = mysql_query($query);
+if (!is_null(mysql_result($result, 0,0)))
+  redirect_to("overview");
+
+$aid = post("allyid");
+$pw = post("pw");
+$query = "SELECT PW, NAME FROM `ally` WHERE ID = $aid";
+$result = mysql_query($query);
+if (mysql_numrows($result) != 1) {
+	$message = error("Diese {ally} existiert nicht!");
+} else {
+  $ally_name = mysql_result($result, 0, "NAME");
+  $pass = mysql_result($result, 0,"PW");
+  if ($pass == "" || $pass == md5($PRESALT . $pw . $POSTSALT)) {
+	$query = "UPDATE `spieler` SET ALLY = $aid WHERE ID = " . uid();
+	mysql_query($query);
+	redirect_to("internranking");
+  } else {
+    $message = "Um dieser {ally} beizutreten wird ein Passwort ben&ouml;tigt.";
+	if ($pw != "") 
+	  $message .= error("Eingegebene Passwort war falsch!");
+	$form = form("joinally");
+	$form .= "<input type=\"hidden\" name=\"allyid\" value=\"$aid\"><input type=\"password\" name=\"pw\"><input type=\"submit\" value=\"Beitreten\">";	
+  }
+}
+?> 

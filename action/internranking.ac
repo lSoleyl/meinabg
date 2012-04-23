@@ -1,0 +1,39 @@
+<?php  
+check_login();
+$header=h(); 
+$aid = get("id");
+if ($aid == "") {
+	$query = "SELECT ALLY FROM `spieler` WHERE ID = ". uid();
+	$result = mysql_query($query);
+	$aid = mysql_result($result, 0,0);
+} else
+  $aid = intval($aid);
+
+$query = "SELECT * FROM `ally` WHERE ID = $aid";
+$result = mysql_query($query);
+if (mysql_numrows($result) != 1) {
+	redirect_to("overview"); //Don't punish, maybe the ally has simply been disbaned
+}
+$ally_name = mysql_result($result, 0, "NAME");
+$total = mysql_result($result, 0, "TOTAL");
+$avg = mysql_result($result, 0, "AVG");
+
+$query = "SELECT * FROM `spieler` WHERE ALLY = $aid ORDER BY RANK ASC";
+$result = mysql_query($query);
+$rankings = "";
+$c = 1;
+while($player = mysql_fetch_array($result)) {
+	$fa = ($player["ID"] == uid()) ? "<b><font color=\"orange\">" : "";
+	$fe = ($player["ID"] == uid()) ? "</font></b>" : "";
+	$title = "";
+	if ($player["TITLE"] != "") 
+		$title = "(<font color=indigo>".$player["TITLE"]."</font>)";
+	if ($player["ACCTYPE"] == 1)
+		$title = "(<font color=green>Admin</font>)";
+	$rankings .= "<tr style=\"background-image:url({IMAGE_DIR}/heading_bg.gif)\"><td>$fa$c$fe</td><td>$fa". $player["NAME"] . "$fe $title<a href=\"index.php?ACTION=newmessage&to=" .$player["NAME"] . "\"><img src=\"$HTML_IMAGES/message.jpg\"></a>$fe</td>";
+	$rankings .= "<td>$fa" . $player["TOTALBALANCE"] . "$fe</td><td>$fa" . round(($player["TOTALBALANCE"] / (double)$total) * 100, 2) . "%$fe</td></tr>";	
+	++$c;
+}
+ 
+ 
+?> 

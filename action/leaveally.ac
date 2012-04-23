@@ -1,0 +1,26 @@
+<?php  
+check_login();
+$header=h(); 
+ 
+ $query = "SELECT ALLY FROM `spieler` WHERE ID = ". uid();
+ $result = mysql_query($query);
+ $aid = mysql_result($result, 0, 0);
+ if (is_null($aid))
+	redirect_to("overview");
+ $query = "SELECT NAME FROM `ally` WHERE ID = $aid";
+ $result = mysql_query($query);
+ $ally_name= mysql_result($result, 0,0);
+ if (post("confirmed") == "Ja") {
+	$query = "UPDATE `spieler` SET ALLY = NULL WHERE ID = " . uid();
+	mysql_query($query);
+	$query = "SELECT COUNT(*) FROM `spieler` WHERE ALLY = $aid";
+	$result = mysql_query($query);
+	$count = mysql_result($result, 0,0);
+	if ($count == 0) {
+		$query = "DELETE FROM `ally` WHERE ID = $aid";
+		mysql_query($query);
+	}
+	redirect_to("overview");
+ }
+ 
+?> 

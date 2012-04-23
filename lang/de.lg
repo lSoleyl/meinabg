@@ -1,0 +1,7 @@
+<?php
+$LANG = array(
+	"ally" => "Gesellschaft",
+	"allys" => "Gesellschafts",
+	"ally_pl" => "Gesellschaften"
+);
+?>

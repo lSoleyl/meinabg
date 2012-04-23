@@ -1,0 +1,10 @@
+<?php  
+ $header = h(0);
+ check_login(1);
+ if (post("up") != "") {
+	$query = "UPDATE `game` SET LASTUPDATE=0 WHERE ENTRYID=1";
+	mysql_query($query);
+	setUpTime(0);
+	redirect_to("overview");
+ }
+?> 

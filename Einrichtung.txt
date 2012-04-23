@@ -1,0 +1,7 @@
+wenn über git geladen wurde, dann folgende Dateien in /include kopieren:
+constants.cfg.default -> constants.cfg
+db.cfg.default -> db.cfg
+
+Pfadangaben in 'include/constants.cfg' anpassen
+MySQL-Angaben in 'include/db.cfg' anpassen
+Pfad zu diesem Verzeichnis in der 'index.php' aus dem Public-Verzeichnis anpassen

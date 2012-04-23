@@ -1,0 +1,4 @@
+<?php
+check_login();
+redirect_to("overview");
+?>
