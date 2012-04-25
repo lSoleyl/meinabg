@@ -18,15 +18,17 @@
 </table>
 </div>
 <div id="heading_bg">
-<div align="left"><font size="+2">Meine Autotrader</font></div></div>
+<div align="left"><font size="+2">Meine Autotrader ({{current}}\{{max}})</font></div></div>
 <div id="main">
-<a href="index.php?ACTION=addatrader">Autotrader hinzuf&uuml;gen</a><br>
+{{addtrader}}
 <table><tr>
 <th style="background-image:url({IMAGE_DIR}/heading_bg.gif)">Aktie</th>
-<th style="background-image:url({IMAGE_DIR}/heading_bg.gif)">Kaufen bei</th>
-<th style="background-image:url({IMAGE_DIR}/heading_bg.gif)">Kaufen</th>
-<th style="background-image:url({IMAGE_DIR}/heading_bg.gif)">Verkaufen bei</th>
-<th style="background-image:url({IMAGE_DIR}/heading_bg.gif)">Verkaufen</th></tr>
+<th style="background-image:url({IMAGE_DIR}/heading_bg.gif)">Kaufen bei &euro;</th>
+<th style="background-image:url({IMAGE_DIR}/heading_bg.gif)">Max. Kaufen</th>
+<th style="background-image:url({IMAGE_DIR}/heading_bg.gif)">Verkaufen bei &euro;</th>
+<th style="background-image:url({IMAGE_DIR}/heading_bg.gif)">Max. Verkaufen</th>
+<th style="background-image:url({IMAGE_DIR}/heading_bg.gif)">N&auml;chster Schritt</th>
+</tr>
 {{autotraders}}
 </table>
 </div>

@@ -1,0 +1,41 @@
+<?php  
+$header=h(); 
+$query = "SELECT COUNT(*) FROM `autotrader` WHERE SPIELERID = " . uid();
+$result = mysql_query($query);
+$traders = mysql_result($result,0,0);
+if ($TRADERCOUNT[accType()] <= $traders)
+	penalty();
+
+$query = "SELECT ID, NAME FROM `aktie` ORDER BY NAME ASC";
+$result = mysql_query($query);
+$selectShare = "";
+while ($share = mysql_fetch_array($result)) {
+	$selectShare .= "<option value=\"". $share["ID"] . "\">". $share["NAME"] . "</option>";
+}
+	
+$buymax = intval(post("buymax"));
+$buyprice = strtr(post("buyprice"), ",", ".");
+$sellmax = intval(post("sellmax"));
+$sellprice = strtr(post("sellprice"), ",", ".");
+$state = intval(post("state"));
+$id = post("ID");
+
+if ($id != "") {
+	preg_match("/[0-9A-Za-z]*/", $id, $matches);
+	if ($matches[0] != $id)
+		penalty();
+	preg_match("/[0-9]*\.?[0-9]{0,2}/", $sellprice, $matches);
+	if ($matches[0] != $sellprice)
+		render("newtrader");
+	preg_match("/[0-9]*\.?[0-9]{0,2}/", $buyprice, $matches);
+	if ($matches[0] != $buyprice)
+		render("newtrader");
+	if ($state != 1 && $state != 0)
+		penalty();
+	//Everything should be okay now
+	$query = "INSERT INTO `autotrader`(SPIELERID, VERKAUFENAB, KAUFENAB, AKTIENID, MAXVERKAUFEN, MAXKAUFEN, STATE) VALUES (" . uid() . ", $sellprice, $buyprice, \"". $id . "\", $sellmax, $buymax, $state)";
+	mysql_query($query);
+	redirect_to("myshares");
+} 
+ 
+?> 

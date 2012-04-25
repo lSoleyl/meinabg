@@ -26,10 +26,10 @@ while($player = mysql_fetch_array($result)) {
 	$fa = ($player["ID"] == uid()) ? "<b><font color=\"orange\">" : "";
 	$fe = ($player["ID"] == uid()) ? "</font></b>" : "";
 	$title = "";
-	if ($player["TITLE"] != "") 
+	if ($TITLE[$player["ACCTYPE"]] != "")
+		$title = "(<font color=green>" . $TITLE[$player["ACCTYPE"]] . "</font>)";
+	else if ($player["TITLE"] != "") 
 		$title = "(<font color=indigo>".$player["TITLE"]."</font>)";
-	if ($player["ACCTYPE"] == 1)
-		$title = "(<font color=green>Admin</font>)";
 	$rankings .= "<tr style=\"background-image:url({IMAGE_DIR}/heading_bg.gif)\"><td>$fa$c$fe</td><td>$fa". $player["NAME"] . "$fe $title<a href=\"index.php?ACTION=newmessage&to=" .$player["NAME"] . "\"><img src=\"$HTML_IMAGES/message.jpg\"></a>$fe</td>";
 	$rankings .= "<td>$fa" . $player["TOTALBALANCE"] . "$fe</td><td>$fa" . round(($player["TOTALBALANCE"] / (double)$total) * 100, 2) . "%$fe</td></tr>";	
 	++$c;

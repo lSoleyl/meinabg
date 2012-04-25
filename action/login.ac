@@ -18,7 +18,7 @@ if (post("name") != "" && post("pw") != "" && $matches[0] == $test) {
 		$error = "<div class=\"error\">Falsches Passwort eingegeben!</div>";
 	else {
 		$_SESSION["uid"] = mysql_result($result, 0, "ID");
-		
+		$_SESSION["accType"] = mysql_result($result, 0, "ACCTYPE");
 		$query = "UPDATE `spieler` SET LASTLOGIN = " . time(). " WHERE ID=". uid();
 		mysql_query($query);
 		redirect_to("loggedin");

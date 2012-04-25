@@ -22,25 +22,23 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `autotrader`
+-- Tabellenstruktur für Tabelle `game`
 --
 
-CREATE TABLE IF NOT EXISTS `autotrader` (
-  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
-  `SPIELERID` bigint(20) NOT NULL,
-  `VERKAUFENAB` decimal(20,2) NOT NULL DEFAULT '0.00',
-  `KAUFENAB` decimal(20,2) NOT NULL DEFAULT '0.00',
-  `AKTIENID` varchar(18) NOT NULL,
-  `MAXVERKAUFEN` bigint(20) NOT NULL DEFAULT '0',
-  `MAXKAUFEN` bigint(20) NOT NULL DEFAULT '0',
-  `STATE` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Zustand... 0 = Gerade gekauft, 1 = gerade Verkauft',
-  PRIMARY KEY (`ID`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+CREATE TABLE IF NOT EXISTS `game` (
+  `ENTRYID` int(11) NOT NULL AUTO_INCREMENT,
+  `LASTUPDATE` bigint(20) NOT NULL DEFAULT '0' COMMENT 'letztes Datenbank & Ranglistenupdate',
+  `TICKER` text NOT NULL,
+  `TRADE` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`ENTRYID`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 --
--- Daten für Tabelle `autotrader`
+-- Daten für Tabelle `game`
 --
 
+INSERT INTO `game` (`ENTRYID`, `LASTUPDATE`, `TICKER`, `TRADE`) VALUES
+(1, 1335377087, ' ', 1);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

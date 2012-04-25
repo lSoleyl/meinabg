@@ -31,8 +31,8 @@
 		$rankings .= " <font color=#ff0000>(-" . ($rank - $lrank) . ")</font>"; 
 	$rankings .= "$fe</td><td>$fa";
 	$rankings .= "$name ";
-	if ($acctype == 1) 
-		$rankings .= "$fe (<font color=green>Admin</font>)$fa";
+	if ($TITLE[$acctype] != "") 
+		$rankings .= "$fe (<font color=green>". $TITLE[$acctype] . "</font>)$fa";
 	else if ($title != "")
 		$rankings .= "$fe (<font color=indigo>$title</font>)$fa";
 	$rankings .= "<a href=\"index.php?ACTION=newmessage&to=$name\"><img src=\"$HTML_IMAGES/message.jpg\"></a>$fe</td>";

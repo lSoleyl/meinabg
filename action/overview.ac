@@ -10,18 +10,26 @@ if (mysql_numrows($result) == 0) {
  redirect_to("login");
 }
 
-if (mysql_result($result, 0, "ACCTYPE") == 1)
+$level = accType();
+if ($level >= $ACCESS["adminlinks"]) {
   $admin_links = "<div id=\"heading_bg\">
   <div align=left><font size=\"+2\">Adminlinks</font></div></div>
-  <div align=left>
-  <a href=\"index.php?ACTION=delplayer\">Spieler l&ouml;schen</a><br>
-  <a href=\"index.php?ACTION=resetgame\">Spielerkonten zur&uuml;cksetzen</a><br>
-  <a href=\"index.php?ACTION=editticker\">Newsticker &auml;ndern</a><br>
-  <a href=\"index.php?ACTION=customquery\">Manuelle Query</a><br>
-  <a href=\"index.php?ACTION=updatenow\">Jetzt Updaten!</a><br>
-  <a href=\"index.php?ACTION=hashgen\">PWHash-Generator</a><br>
-  <a href=\"index.php?ACTION=loginas\">Einloggen als</a></div>";
-else
+  <div align=left>";
+  if ($level >= $ACCESS["delplayer"])
+	$admin_links .= "<a href=\"index.php?ACTION=delplayer\">Spieler l&ouml;schen</a><br>";
+  if ($level >= $ACCESS["resetgame"])
+    $admin_links .= "<a href=\"index.php?ACTION=resetgame\">Spielerkonten zur&uuml;cksetzen</a><br>";
+  if ($level >= $ACCESS["editticker"])
+	$admin_links .= "<a href=\"index.php?ACTION=editticker\">Newsticker &auml;ndern</a><br>";
+  if ($level >= $ACCESS["customquery"])
+	$admin_links .= "<a href=\"index.php?ACTION=customquery\">Manuelle Query</a><br>";
+  if ($level >= $ACCESS["updatenow"])
+	$admin_links .= "<a href=\"index.php?ACTION=updatenow\">Jetzt Updaten!</a><br>";
+  if ($level >= $ACCESS["hashgen"])
+	$admin_links .= "<a href=\"index.php?ACTION=hashgen\">PWHash-Generator</a><br>";
+  if ($level >= $ACCESS["loginas"])
+	$admin_links .= "<a href=\"index.php?ACTION=loginas\">Einloggen als</a></div>";
+} else
   $admin_links = "";
 $li = mysql_result($result, 0, "LASTINTEREST");
 $today = date("Y-m-d", time());

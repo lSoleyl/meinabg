@@ -47,6 +47,20 @@ if ($length == 0)
   $dis = "disabled";
 else
   $dis = "";
-  
+    
+//AUTOTRADERS	
+$query = "SELECT `autotrader`.ID, SPIELERID, VERKAUFENAB, KAUFENAB, AKTIENID, MAXVERKAUFEN, MAXKAUFEN, STATE, NAME FROM `autotrader`, `aktie` WHERE SPIELERID = ".uid() . " AND `aktie`.ID = AKTIENID";
+$result = mysql_query($query);
 
+$addtrader = "";
+$current = mysql_numrows($result);
+$max = $TRADERCOUNT[accType()];
+if ($current < $max)
+	$addtrader = "<a href=\"index.php?ACTION=newtrader\">Autotrader hinzuf&uuml;gen</a><br>";
+$autotraders = "";
+while ($autotrader = mysql_fetch_array($result)) {
+    $job = ($autotrader["STATE"] == 0) ? "Verkaufen" : "Kaufen";
+	$autotraders .= "<tr><td>". $autotrader["NAME"] . "</td><td>" . $autotrader["KAUFENAB"] . "</td><td>" . $autotrader["MAXKAUFEN"] . "</td>";
+	$autotraders .= "<td>" . $autotrader["VERKAUFENAB"] . "</td><td>" . $autotrader["MAXVERKAUFEN"] . "</td><td>$job</td></tr>";
+}
 ?> 
