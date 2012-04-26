@@ -2,6 +2,11 @@
 <div align="left"><font size="+2">Changelog</font></div></div>
 <div id="main">
 <div align="left">
+<h3>26.04.12</h3>
+<ul>
+<li>Autofokus auf die Eingabefelder beim Kaufen und Verkaufen von Aktien gelegt</li>
+<li>Vom Transaktionslog aus kann man eine Aktie direkt wieder kaufen</li>
+</ul>
 <h3>23.04.12</h3>
 <ul>
 <li>Gesamtwert pro Aktie unter meine Aktien zu finden</li>
