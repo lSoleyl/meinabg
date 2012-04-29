@@ -1,6 +1,7 @@
 <?php
 //Yeeeeaaayyyyyy redirect_to ist möglich!!!!! n1 ;D
 require_once "include/constants.cfg";
+require_once "include/globalconstants.cfg";
 require_once "include/functions.php";
 while(true) {
 	try 

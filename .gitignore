@@ -3,3 +3,4 @@
 /include/functions.php
 /include/boerse_adapter.php
 /include/constants.cfg
+/include/globalconstants.cfg
