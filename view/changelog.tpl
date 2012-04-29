@@ -7,6 +7,7 @@
 <li><a href="index.php?ACTION=howto#TG">Transaktionsgeb&uuml;hren</a> werden bei jeder Transaktion automatisch abgezogen.</li>
 <li>Beim Kaufen/Verkaufen werden die anfallenden Transaktionsgeb&uuml;hren dynamisch errechnet.</li>
 <li>Im Transaktionslog werden die angefallenen Transaktionsgeb&uuml;hren ebenfalls aufgelistet.</li>
+<li><a href="index.php?ACTION=howto#AT">Autotrader</a> eingebaut</li>
 </ul>
 <h3>26.04.12</h3>
 <ul>

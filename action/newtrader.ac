@@ -1,5 +1,6 @@
 <?php  
 $header=h(); 
+$error = "";
 $query = "SELECT COUNT(*) FROM `autotrader` WHERE SPIELERID = " . uid();
 $result = mysql_query($query);
 $traders = mysql_result($result,0,0);
@@ -32,6 +33,14 @@ if ($id != "") {
 		render("newtrader");
 	if ($state != 1 && $state != 0)
 		penalty();
+	if ($sellprice <= $buyprice) {
+		$error = error("Der Verkaufspreis muss h&ouml;her eingestellt werden, als der Kaufpreis");
+		render("newtrader");
+	}
+	if ($sellmax <= 0 || $buymax <= 0) {
+		$error = error("Ung&uuml;ltige Werte f&uuml;r einen Autotrader eingegeben!");
+		render("newtrader");
+	}
 	//Everything should be okay now
 	$query = "INSERT INTO `autotrader`(SPIELERID, VERKAUFENAB, KAUFENAB, AKTIENID, MAXVERKAUFEN, MAXKAUFEN, STATE) VALUES (" . uid() . ", $sellprice, $buyprice, \"". $id . "\", $sellmax, $buymax, $state)";
 	mysql_query($query);

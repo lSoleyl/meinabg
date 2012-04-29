@@ -15,8 +15,8 @@ if (post("count") != "" && post("id") != "" && intval(post("count")) > 0) {
 	$price = mysql_result($result, 0, "KP");
 	$share_val = mysql_result($result, 0, "KURS");
 	$name = mysql_result($result, 0, "NAME");
-	if ($price * $count + getShareFee($share_val, $count, $sharefee_min, $sharefee_max, $sharefee) > $balance)
-		$count = getMaxShares($balance, $price, $share_val, $sharefee_min, $sharefee_max, $sharefee);
+	if ($price * $count + getShareFee($share_val, $count) > $balance)
+		$count = getMaxShares($balance, $price, $share_val);
 	if ($count <= 0) {
 		$error = error("Du kannst dir keine Aktien leisten!");
 		$share_name = $name;
@@ -31,7 +31,7 @@ if (post("count") != "" && post("id") != "" && intval(post("count")) > 0) {
 		
 		render("buyshares");
 	}
-	$query = "UPDATE `spieler` SET BALANCE=BALANCE-".($count*$price+getShareFee($share_val, $count, $sharefee_min, $sharefee_max, $sharefee))." WHERE ID = " . uid();
+	$query = "UPDATE `spieler` SET BALANCE=BALANCE-".($count*$price+getShareFee($share_val, $count))." WHERE ID = " . uid();
 	mysql_query($query); //Update Balance
 	$query = "SELECT ANZAHL FROM `besitzt` WHERE AKTIENID = \"$id\" AND SPIELERID = ". uid();
 	$result = mysql_query($query);

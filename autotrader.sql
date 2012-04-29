@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 25. April 2012 um 20:08
+-- Erstellungszeit: 29. April 2012 um 22:05
 -- Server Version: 5.1.41
 -- PHP-Version: 5.3.1
 
@@ -34,8 +34,9 @@ CREATE TABLE IF NOT EXISTS `autotrader` (
   `MAXVERKAUFEN` bigint(20) NOT NULL DEFAULT '0',
   `MAXKAUFEN` bigint(20) NOT NULL DEFAULT '0',
   `STATE` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Zustand... 0 = Gerade gekauft, 1 = gerade Verkauft',
+  `TRANSAKTIONEN` bigint(20) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`ID`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
 
 --
 -- Daten für Tabelle `autotrader`

@@ -3,6 +3,10 @@ check_login();
 $header = h(2);
 $hint = hint();
 
+$deltrader=get("deltrader");
+if ($deltrader != "") { //Delete Autotrader
+	mysql_query("DELETE FROM `autotrader` WHERE ID=$deltrader AND SPIELERID=". uid());
+}
 $order = get("order");
 $sort_by = get("sort_by");
 if ($order != "" && $order != "asc" && $order != "desc")
@@ -49,7 +53,7 @@ else
   $dis = "";
     
 //AUTOTRADERS	
-$query = "SELECT `autotrader`.ID, SPIELERID, VERKAUFENAB, KAUFENAB, AKTIENID, MAXVERKAUFEN, MAXKAUFEN, STATE, NAME FROM `autotrader`, `aktie` WHERE SPIELERID = ".uid() . " AND `aktie`.ID = AKTIENID";
+$query = "SELECT `autotrader`.ID, SPIELERID, VERKAUFENAB, KAUFENAB, AKTIENID, MAXVERKAUFEN, MAXKAUFEN, STATE, NAME, TRANSAKTIONEN FROM `autotrader`, `aktie` WHERE SPIELERID = ".uid() . " AND `aktie`.ID = AKTIENID";
 $result = mysql_query($query);
 
 $addtrader = "";
@@ -61,6 +65,7 @@ $autotraders = "";
 while ($autotrader = mysql_fetch_array($result)) {
     $job = ($autotrader["STATE"] == 0) ? "Verkaufen" : "Kaufen";
 	$autotraders .= "<tr><td>". $autotrader["NAME"] . "</td><td>" . $autotrader["KAUFENAB"] . "</td><td>" . $autotrader["MAXKAUFEN"] . "</td>";
-	$autotraders .= "<td>" . $autotrader["VERKAUFENAB"] . "</td><td>" . $autotrader["MAXVERKAUFEN"] . "</td><td>$job</td></tr>";
+	$autotraders .= "<td>" . $autotrader["VERKAUFENAB"] . "</td><td>" . $autotrader["MAXVERKAUFEN"] . "</td><td>$job</td>";
+	$autotraders .= "<td>". $autotrader["TRANSAKTIONEN"] ."</td><td><a href=\"index.php?ACTION=myshares&deltrader=". $autotrader["ID"] . "\">L&ouml;schen</a></td></tr>";
 }
 ?> 

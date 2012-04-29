@@ -28,7 +28,15 @@ anfallenden Geb&uuml;hren beim Kaufen/Verkaufen direkt angezeigt.
 Unter <a href="index.php?ACTION=myshares">MEINE AKTIEN</a> gibt es eine Auflistung alle Aktien, die man gegenw&auml;rtig besitzt. Dort kann man auf das pers&ouml;nliche Transaktionslog aller bisher gehandelten
 Aktien zugreifen. Dies ist ganz n&uuml;tzlich, um zu sehen, ob man mit einer Aktie &uuml;berhaupt Gewinn macht. Au&szlig;erdem kann man dort nachsehen f&uuml;r welchen St&uuml;ckpreis man die 
 Aktien gekauft hat, die man momentan besitzt.
-<p>
+<p/><a name="AT"></a>
+Um sich das Spiel etwas zu erleichern, kann jeder Spieler unter <a href="index.php?ACTION=myshares">MEINE AKTIEN</a> bis zu 3 Autotrader einrichten. Das sind Transaktionen, die automatisch ablaufen, sobald die Kurse die Voreingestellten Werte erreichen. Die 
+Autotrader pr&uuml;fen bei jeder Kurs&auml;nderung, ob Aktien gekauft/verkauft werden m&uuml;ssen.<br>
+<i>Da die Kurse aufgrund technischer Schwierigkeiten nur dann neu geladen werden k&ouml;nnen, wenn mindestens ein Spieler gerade auf der Seite ist, kann es sein, dass die Autotrader nicht handeln, obwohl 
+die Aktienkurse die eingestellten Grenzwerte &uuml;berschritten haben.<br>
+Ein weiteres Detail: Um den Seitenaufbau beim Aktualisieren nicht ewig in die L&auml;nge zu ziehen, werden die Autotrader getrennt vom Laden der Kurse berechnet. D.h wenn die Kurse aktualisiert wurden,
+dann werden beim n&auml;chsten Seitenaufruf die Autotrader berechnet.</i>
+
+<p/>
 <i>Wann &auml;ndern sich denn die Aktienkurse?</i><br>
 Auf der <a href="index.php?ACTION=overview">&Uuml;bersicht</a> gibt es einen Countdown, der st&auml;ndig runterz&auml;hlt, bis er bei 0 Sekunden angekommen ist. Wenn dieser Countdown abgelaufen ist, wird
 die Aktienliste beim n&auml;chsten Aufruf der &Uuml;bersicht aktualisiert. Dies kann dazu f&uuml;hren, dass sich die Seite bis zu 30 Sekunden lang aufbaut, weil die Seite alle Daten aus der <a href="http://www.boerse.de/realtime/aktien/Deutschland">oben genannten Liste </a>

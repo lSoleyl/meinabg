@@ -28,6 +28,8 @@
 <th style="background-image:url({IMAGE_DIR}/heading_bg.gif)">Verkaufen bei &euro;</th>
 <th style="background-image:url({IMAGE_DIR}/heading_bg.gif)">Max. Verkaufen</th>
 <th style="background-image:url({IMAGE_DIR}/heading_bg.gif)">N&auml;chster Schritt</th>
+<th style="background-image:url({IMAGE_DIR}/heading_bg.gif)">Transaktionen</th>
+<th style="background-image:url({IMAGE_DIR}/heading_bg.gif)"></th>
 </tr>
 {{autotraders}}
 </table>
