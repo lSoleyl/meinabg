@@ -14,7 +14,17 @@ Die in diesem Spiel gelisteten Aktien entsprechen folgender <a href="http://www.
 Aktien kaufen kann man einfach, indem man auf deren Kaufpreis in der Liste klickt und anschlie&szlig;end die Menge ausw&auml;hlt. Jedoch sollte man gut abw&auml;gen, welche Aktie man kauft.<br>
 <i>Die meist teuren <a href="http://www.boerse.de/realtime-kurse/DAX-Aktien/DE0008469008">DAX-Aktien</a> sind eine relativ sichere Anlage</i><br>
 <i>Mit kleinen Aktien, die sich im Cent-Bereich bewegen kann man riesige Gewinne erzielen, wenn die Aktien auch um nur einen Cent steigen, wenn man genug davon hat.</i>
-<p>
+<p><a name="TG"></a>
+Damit die Spieler Aktien &uuml;ber l&auml;ngere Zeitr&auml;ume behalten, gibt es eine Transaktionsgeb&uuml;hr, die bei jeder Transaktion automatisch abgezogen wird. Sie berechnet
+sich wie folgt:
+<ul>
+<li>Kurs der gehandelten Aktie * Anzahl der gehandelten Aktien * 0.25%</li>
+<li>Mindestens 9,90&euro;</li>
+<li>Maximal 49,90&euro;</li>
+</ul>
+Durch den Mindestbetrag kann es sogar vorkommen, dass man beim Verkaufen von Aktien noch drauf zahlen muss!<br>Um die Geb&uuml;hren nicht jedes mal von Hand auszurechnen, werden die
+anfallenden Geb&uuml;hren beim Kaufen/Verkaufen direkt angezeigt.
+<p/>
 Unter <a href="index.php?ACTION=myshares">MEINE AKTIEN</a> gibt es eine Auflistung alle Aktien, die man gegenw&auml;rtig besitzt. Dort kann man auf das pers&ouml;nliche Transaktionslog aller bisher gehandelten
 Aktien zugreifen. Dies ist ganz n&uuml;tzlich, um zu sehen, ob man mit einer Aktie &uuml;berhaupt Gewinn macht. Au&szlig;erdem kann man dort nachsehen f&uuml;r welchen St&uuml;ckpreis man die 
 Aktien gekauft hat, die man momentan besitzt.
@@ -60,14 +70,14 @@ Sobald man beigetreten ist, werden {ally}mitglieder auf der Rangliste hellblau h
 Manche {ally_pl} sind privat und haben deshalb ein Passwort, welches man kennen muss, um beitreten zu k&ouml;nnen. Wer mindestens <u>15.000&euro;</u> Gesamtverm&ouml;gen besitzt, kann auch selbst eine {ally} gr&uuml;nden.
 Die Gr&uuml;ndung kostet 1.000&euro;. Falls dabei ein Passwort angegeben wurde, muss man sich dieses unbedingt merken, da ansonsten niemand sonst beitreten kann. Das Passwort kann weder wiederhergestellt, noch ge&auml;ndert werden!
 <br><i>Direkt nach Beitritt wird das Gesamtverm&ouml;gen und die Prozentuale Angabe in der Rangliste wahrscheinlich nicht stimmen. Dies wird mit dem n&auml;chsten Update korrigiert.</i>
-<p>
+<p/>
 Es ist jederzeit m&ouml;glich aus einer {ally} auszutreten. Tritt der letzte Spieler aus einer {ally}, so wird diese gel&ouml;scht.
-<p>
+<p/>
 Da dies ein faires Wettbewerbsspiel sein soll, muss nat&uuml;rlich ausgeschlossen werden, dass man durch irgendwelche <a href="index.php?ACTION=whatischeating">Tricks/Cheats</a> einen Vorteil gegen&uuml;ber den Mitspielern hat. 
 Aus diesem Grund ist das Spiel sehr restriktiv und hat ein strenges Kontrollsystem. Dieses bestraft <a href="index.php?ACTION=whatischeating">Cheatversuche</a> mit einer Geldstrafe von 1.000&euro;.
 Die wird sogar dann abgezogen, wenn man weniger als 1.000&euro; besitzt. Dann geht das Konto ins Minus.<br>
 Aber keine Sorge. Das System passt schon auf, dass es euch nicht aus versehen bestraft. Wenn man das Standard-Userinterface so nutzt, wie es vorgesehen ist, sollte es zu keinen Problemen kommen. 
-<p>
+<p/>
 <a href="index.php?ACTION=disclaimer">Impressum</a>
 </div>
 </div>
