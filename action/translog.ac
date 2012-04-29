@@ -14,23 +14,32 @@ if (mysql_numrows($result) == 0)
 $length = mysql_numrows($result);
 $transactions = "";
 $bil = 0;
+$total_fee = 0;
 $umsatz = 0;
 for($c = 0; $c < $length; ++$c) {
 	$time = mysql_result($result, $c, "TIME");
 	$anzahl = mysql_result($result, $c, "ANZAHL");
 	$preis = mysql_result($result, $c, "PREIS");
 	$verkauf = mysql_result($result, $c, "VERKAUF");
+	$fee = mysql_result($result, $c, "TG");
 	$color = $verkauf == 0 ? "red" : "green";
 	$total = $preis * $anzahl;
-	$transactions .= "<tr class=$color><td>$time</td><td>$anzahl</td><td>$preis</td><td>$total</td></tr>";
+	if ($verkauf == 0)
+		$total += $fee;
+	else
+		$total -= $fee;
+	$total = number_format(round($total, 2), 2, '.', '');
+	$transactions .= "<tr class=$color><td>$time</td><td>$anzahl</td><td>$preis</td><td>$total</td><td>$fee</td></tr>";
 	if ($verkauf == 0)
 		$bil -= $total;
 	else
 		$bil += $total;
 	$umsatz += $total;
+	$total_fee += $fee;
 }
-$bil = round($bil,2); 
-$umsatz = round($umsatz,2); 
+$total_fee = number_format(round($total_fee, 2), 2, '.', '');
+$bil = number_format(round($bil, 2), 2, '.', '');
+$umsatz = number_format(round($umsatz, 2), 2, '.', '');
 
 if ($bil < 0)
  $bil = "<span class=red>$bil</span>";
