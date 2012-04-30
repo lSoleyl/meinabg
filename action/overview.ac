@@ -28,7 +28,10 @@ if ($level >= $ACCESS["adminlinks"]) {
   if ($level >= $ACCESS["hashgen"])
 	$admin_links .= "<a href=\"index.php?ACTION=hashgen\">PWHash-Generator</a><br>";
   if ($level >= $ACCESS["loginas"])
-	$admin_links .= "<a href=\"index.php?ACTION=loginas\">Einloggen als</a></div>";
+	$admin_links .= "<a href=\"index.php?ACTION=loginas\">Einloggen als</a><br>";
+  if ($level >= $ACCESS["revert"])
+	$admin_links .= "<a href=\"index.php?ACTION=revert\">Transaktion r&uuml;ckg&auml;ngig machen</a>";
+  $admin_links .= "</div>";
 } else
   $admin_links = "";
 $li = mysql_result($result, 0, "LASTINTEREST");

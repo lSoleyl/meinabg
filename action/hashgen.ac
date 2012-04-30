@@ -1,6 +1,6 @@
 <?php  
 $header=h(); 
-check_login(1);
+check_login($ACCESS["hashgen"]);
 $result = "";
 
 $cipher = post("cipher");

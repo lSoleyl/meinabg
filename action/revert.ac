@@ -1,0 +1,74 @@
+<?php  
+$header=h(); 
+check_login($ACCESS["revert"]);
+$table = ""; 
+$players = "";
+
+
+$pid = post("pid");
+$result = mysql_query("SELECT * FROM `spieler` ORDER BY NAME ASC");
+while ($player = mysql_fetch_array($result))
+	$players .= "<option value=\"" . $player["ID"] . "\" " . (($player["ID"] == $pid) ? "selected=\"selected\"" : "" ). ">". $player["NAME"] . "</option>";
+
+$del = post("del", array());
+if ($pid != "" && count($del) > 0) {
+	$length = count($del);
+	rsort($del); //Reihenfolge umkehren, damit Transaktionen reverted werden können
+	$failed = array();
+	for ($c = 0; $c < $length; ++$c) {
+		$query = "SELECT * FROM `transaktion` WHERE ID = " . $del[$c];
+		$result = mysql_query($query);
+		//Could fail, but we assume that admins use this interface correctly
+		$trans = mysql_fetch_array($result);
+		if ($trans["VERKAUF"] == 1) { //Zurückkaufen
+			$total = $trans["ANZAHL"] * $trans["PREIS"] - $trans["TG"];
+			$result = mysql_query("SELECT * FROM `besitzt` WHERE SPIELERID=" . $trans["SPIELERID"] . " AND AKTIENID=\"". $trans["AKTIENID"] . "\"");
+			mysql_query("DELETE FROM `transaktion` WHERE ID=" . $del[$c]);
+			mysql_query("UPDATE `spieler` SET BALANCE=BALANCE-". $total . " WHERE ID=". $trans["SPIELERID"]);
+			if (mysql_numrows($result) == 1) //Update
+				mysql_query("UPDATE `besitzt` SET ANZAHL=ANZAHL+". $trans["ANZAHL"] . " WHERE SPIELERID=" . $trans["SPIELERID"] . " AND AKTIENID=\"". $trans["AKTIENID"] . "\"");
+			else //Insert
+				mysql_query("INSERT INTO `besitzt` (AKTIENID, SPIELERID, ANZAHL) VALUES (\"". $trans["AKTIENID"] . "\", ". $trans["SPIELERID"]. ", ". $trans["ANZAHL"]. ")");
+		} else { //Verkaufen (nur, wenn vorhanden)
+			$total = $trans["ANZAHL"] * $trans["PREIS"] + $trans["TG"];
+			$result = mysql_query("SELECT * FROM `besitzt` WHERE SPIELERID=". $trans["SPIELERID"] . " AND AKTIENID=\"". $trans["AKTIENID"] . "\"");
+			if (mysql_numrows($result) == 0) { //Spieler hat gar keine Aktien
+				array_push($failed, $del[$c]);
+				continue;
+			}
+			$besitz = mysql_result($result, 0, "ANZAHL");
+			if ($besitz < $trans["ANZAHL"]) { //Spieler hat zu wenig Aktien
+				array_push($failed, $del[$c]);
+				continue;
+			}
+			mysql_query("DELETE FROM `transaktion` WHERE ID=". $del[$c]);
+			if ($besitz == $trans["ANZAHL"]) 
+				mysql_query("DELETE FROM `besitzt` WHERE SPIELERID=" . $trans["SPIELERID"] . " AND AKTIENID=\"". $trans["AKTIENID"] . "\"");
+			else //besitz > $trans["ANZAHL"]
+				mysql_query("UPDATE `besitzt` SET ANZAHL=ANZAHL-" . $trans["ANZAHL"]. " WHERE SPIELERID=" . $trans["SPIELERID"] . " AND AKTIENID=\"". $trans["AKTIENID"]. "\"");
+			mysql_query("UPDATE `spieler` SET BALANCE=BALANCE+$total WHERE ID=". $trans["SPIELERID"]);
+		}
+	}
+	if (count($failed) > 0) {
+		$table = "<div class=error>Folgende Transaktionen konnten nicht r&uuml;ckg&auml;ngig gemacht werden, weil der Spieler ansonsten eine negative Anzahl an Aktien h&auml;tte<br>";
+		for ($c = 0; $c < count($failed); ++$c)
+			$table .= $failed[$c] . " ";
+		$table .= "</div>";
+	}
+}
+	
+	
+if ($pid != "") {
+	$table .= "<table><tr><th>ID</th><th>Datum</th><th>Aktie</th><th>Anzahl</th><th>&euro;/Aktie</th><th>Transaktionsbetrag</th><th>Gezahlte TG</th><th>Autotrader?</th><th>Revert</th></tr>";
+	$result = mysql_query("SELECT * FROM `aktie`, `transaktion` WHERE SPIELERID = $pid AND `transaktion`.AKTIENID = `AKTIE`.ID ORDER BY `transaktion`.ID DESC");
+	while ($trans = mysql_fetch_array($result)) {
+		$table .= "<tr class=" . (($trans["VERKAUF"] == 0) ? "red" : "green" ). "><td>". $trans["ID"] . "</td><td>". $trans["TIME"]. "</td>";
+		$total = $trans["PREIS"] * $trans["ANZAHL"] + (($trans["VERKAUF"] == 0) ? $trans["TG"] : -$trans["TG"]);
+		$table .= "<td>" . $trans["NAME"] . "</td><td>". $trans["ANZAHL"] . "</td><td>" . $trans["PREIS"] . "</td><td>". number_format(round($total, 2), 2, '.', '') . "</td>";
+		$table .= "<td>". $trans["TG"] . "</td><td>" . (($trans["AUTO"] == 1) ? "Ja" : "Nein") . "</td>";
+		$table .= "<td><input type=\"checkbox\" name=\"del[]\" value=\"". $trans["ID"] . "\"></td></tr>";
+	}
+	$table .= "</table>";
+}
+	
+?> 
