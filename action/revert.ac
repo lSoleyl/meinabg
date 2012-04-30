@@ -60,7 +60,8 @@ if ($pid != "" && count($del) > 0) {
 	
 if ($pid != "") {
 	$table .= "<table><tr><th>ID</th><th>Datum</th><th>Aktie</th><th>Anzahl</th><th>&euro;/Aktie</th><th>Transaktionsbetrag</th><th>Gezahlte TG</th><th>Autotrader?</th><th>Revert</th></tr>";
-	$result = mysql_query("SELECT * FROM `aktie`, `transaktion` WHERE SPIELERID = $pid AND `transaktion`.AKTIENID = `AKTIE`.ID ORDER BY `transaktion`.ID DESC");
+	$result = mysql_query("SELECT * FROM `aktie`, `transaktion` WHERE SPIELERID = $pid AND `transaktion`.AKTIENID = `aktie`.ID ORDER BY `transaktion`.ID DESC");
+	if (mysql_errno()) die(mysql_error());
 	while ($trans = mysql_fetch_array($result)) {
 		$table .= "<tr class=" . (($trans["VERKAUF"] == 0) ? "red" : "green" ). "><td>". $trans["ID"] . "</td><td>". $trans["TIME"]. "</td>";
 		$total = $trans["PREIS"] * $trans["ANZAHL"] + (($trans["VERKAUF"] == 0) ? $trans["TG"] : -$trans["TG"]);
