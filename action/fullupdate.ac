@@ -1,0 +1,4 @@
+<?php  
+$lastup = mysql_result(mysql_query("SELECT LASTUPDATE FROM `game` WHERE ENTRYID=1"), 0,0);
+check_update($lastup);
+?> 
