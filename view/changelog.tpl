@@ -2,6 +2,10 @@
 <div align="left"><font size="+2">Changelog</font></div></div>
 <div id="main">
 <div align="left">
+<h3>07.05.12</h3>
+<ul>
+<li>Fehlerhaft angezeigten Javascripttext im Timer korrigiert.<i>(Update &uuml;berf&auml;llig)</i></li>
+</ul>
 <h3>29.04.12</h3>
 <ul>
 <li><a href="index.php?ACTION=howto#TG">Transaktionsgeb&uuml;hren</a> werden bei jeder Transaktion automatisch abgezogen.</li>
