@@ -2,7 +2,10 @@
 check_login();
 $header = h(2);
 $hint = hint();
-
+if (!empty($_SESSION["upd"]) && $_SESSION["upd"] == 1) {
+  $_SESSION["upd"] = 0;
+  $hint .= "<meta http-equiv=\"refresh\" content=\"3; URL=index.php?ACTION=myshares\">";
+}
 $deltrader=get("deltrader");
 if ($deltrader != "") { //Delete Autotrader
 	mysql_query("DELETE FROM `autotrader` WHERE ID=$deltrader AND SPIELERID=". uid());

@@ -33,6 +33,7 @@ if (post("count") != "" && post("id") != "" && intval(post("count")) > 0) {
 	$query = "INSERT INTO `transaktion` (SPIELERID, AKTIENID, ANZAHL, PREIS, VERKAUF, TG) VALUES (". uid() . ", \"$id\", $count, $price, 1, ". getShareFee($share_val, $count). ")";
 	mysql_query($query);
 	set_hint("<div class=\"succ\">$count '$name' Aktien verkauft</div>");
+	$_SESSION["upd"] = 1;
 	redirect_to("myshares");
 }
 

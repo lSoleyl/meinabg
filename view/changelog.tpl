@@ -2,6 +2,10 @@
 <div align="left"><font size="+2">Changelog</font></div></div>
 <div id="main">
 <div align="left">
+<h3>11.05.12</h3>
+<ul>
+<li>Nach dem Kaufen und Verkaufen von Aktien wird die Seite automatisch nach 3 Sekunden gewechselt. Dadurch wird verhindert, dass bei einem Refresh mehrfach Aktien ge-/verkauft werden.</li>
+</ul>
 <h3>07.05.12</h3>
 <ul>
 <li>Fehlerhaft angezeigten Javascripttext im Timer korrigiert.<i>(Update &uuml;berf&auml;llig)</i></li>
