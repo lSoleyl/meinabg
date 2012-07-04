@@ -19,8 +19,8 @@ Damit die Spieler Aktien &uuml;ber l&auml;ngere Zeitr&auml;ume behalten, gibt es
 sich wie folgt:
 <ul>
 <li>Kurs der gehandelten Aktie * Anzahl der gehandelten Aktien * 0.25%</li>
-<li>Mindestens 9,90&euro;</li>
-<li>Maximal 49,90&euro;</li>
+<li>Mindestens 7,90&euro;</li>
+<li>Maximal 39,90&euro;</li>
 </ul>
 Durch den Mindestbetrag kann es sogar vorkommen, dass man beim Verkaufen von Aktien noch drauf zahlen muss!<br>Um die Geb&uuml;hren nicht jedes mal von Hand auszurechnen, werden die
 anfallenden Geb&uuml;hren beim Kaufen/Verkaufen direkt angezeigt.
