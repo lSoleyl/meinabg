@@ -1,0 +1,15 @@
+<html>
+  <form action="www.boerse.de/ajax/table.php" method="post">
+    Page Size: <input type="text" name="K_PAGE_SIZE" value="500"><br/>
+    <input type="hidden" name="K_RESEARCH" value="0">
+    <input type="hidden" name="K_RESEARCH_TIME" value="0d">
+    Welche Liste<input type="text" name="LISTID" value="lak_52@16"> (= deutsche Aktien)<br/>
+    <input type="hidden" name="FIELDS[0]" value="N">
+    <input type="hidden" name="FIELDS[1]" value="b">
+    <input type="hidden" name="FIELDS[2]" value="a">
+    <input type="hidden" name="FIELDS[3]" value="p">
+    Offset(Pagination): <input type="text" name="START" value="0"><br/>
+    End(Pagination): <input type="text" name="END" value="500"><br/>
+    <input type="submit" value="send">
+  </form>
+</html>
